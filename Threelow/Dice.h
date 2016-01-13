@@ -11,8 +11,11 @@
 @interface Dice : NSObject
 
 @property (nonatomic, strong) NSString *diceValue;
+@property (nonatomic, assign) bool held;
 
 -(NSString *) rollDice;
+-(void) holdDice;
+-(void) unHoldDice;
 
 -(id) init;
 

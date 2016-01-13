@@ -31,6 +31,7 @@
         else if (rand == 6) {
             _diceValue = @"\u2685";
         }
+        _held = NO;
     }
     return self;
 }
@@ -57,5 +58,18 @@
     }
     else abort();
 }
+
+
+-(void) holdDice {
+    self.held = YES;
+    self.diceValue = [[@"[" stringByAppendingString:self.diceValue] stringByAppendingString:@"]"];
+}
+
+-(void) unHoldDice {
+    self.held = NO;
+    self.diceValue = [self.diceValue stringByReplacingOccurrencesOfString:@"[" withString:@""];
+    self.diceValue = [self.diceValue stringByReplacingOccurrencesOfString:@"]" withString:@""];
+}
+
 
 @end
