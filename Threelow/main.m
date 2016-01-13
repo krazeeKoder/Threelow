@@ -22,74 +22,70 @@ int main(int argc, const char * argv[]) {
     
     bool runLoop = YES;
     NSLog(@"Welcome to threelow roller!! To roll the dice type low and to exit type anything else!");
+    char userInput[255];
+    fgets(userInput,255,stdin);
+    NSString *userRequest = [NSString stringWithUTF8String:userInput];
+    userRequest = [userRequest stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    if ([userRequest isEqual: @"low"]) {
+        [dice1 rollDice];
+        [dice2 rollDice];
+        [dice3 rollDice];
+        [dice4 rollDice];
+        [dice5 rollDice];
+    }
+    else { abort();}
     while (runLoop) {
-        
-        char userInput[255];
-        fgets(userInput,255,stdin);
-        NSString *userRequest = [NSString stringWithUTF8String:userInput];
-        userRequest = [userRequest stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-        if ([userRequest isEqual: @"low"]) {
-            dice1.diceValue = [dice1 rollDice];
-            dice2.diceValue = [dice2 rollDice];
-            dice3.diceValue = [dice3 rollDice];
-            dice4.diceValue = [dice4 rollDice];
-            dice5.diceValue = [dice5 rollDice];
-            bool makingHoldDecision = YES;
-            while (makingHoldDecision) {
-                NSLog(@"%@ %@ %@ %@ %@", dice1.diceValue, dice2.diceValue, dice3.diceValue, dice4.diceValue, dice5.diceValue);
-                        NSLog(@"Enter the index of a dice you would like to hold or unhold, if you are done, type low to re-roll, reset to reset all holds, and anything else to exit");
-                char choice[255];
-                fgets(choice,255,stdin);
-                NSString *holdChoice = [NSString stringWithUTF8String:choice];
-                holdChoice = [holdChoice stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-                NSCharacterSet *nonNumberSet = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
-                
-                if ([holdChoice rangeOfCharacterFromSet:nonNumberSet].location != NSNotFound) {
-                    if ([holdChoice isEqual: @"low"]) {
-                        makingHoldDecision = NO;
-                        for (Dice *dice in diceCollection) {
-                            if (dice.held == NO) {
-                                dice.diceValue = [dice rollDice];
-                            }
-                            else {
-                                [dice unHoldDice];
-                            }
+        bool makingHoldDecision = YES;
+        while (makingHoldDecision) {
+            
+            NSLog(@"%@ %@ %@ %@ %@ TotalScore: %d", dice1.diceValue, dice2.diceValue, dice3.diceValue, dice4.diceValue, dice5.diceValue, [Dice totalScore:diceCollection]);
+            NSLog(@"Enter the index of a dice you would like to hold or unhold, if you are done, type low to re-roll, reset to reset all holds, and anything else to exit");
+            char choice[255];
+            fgets(choice,255,stdin);
+            NSString *holdChoice = [NSString stringWithUTF8String:choice];
+            holdChoice = [holdChoice stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+            NSCharacterSet *nonNumberSet = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
+            
+            if ([holdChoice rangeOfCharacterFromSet:nonNumberSet].location != NSNotFound) {
+                if ([holdChoice isEqual: @"low"]) {
+                    makingHoldDecision = NO;
+                    for (Dice *dice in diceCollection) {
+                        if (dice.held == NO) {
+                            [dice rollDice];
                         }
-                        NSLog(@"%@ %@ %@ %@ %@", dice1.diceValue, dice2.diceValue, dice3.diceValue, dice4.diceValue, dice5.diceValue);
-                        NSLog(@"Enter the index of a dice you would like to hold or unhold, if you are done, type low to re-roll, reset to reset all holds, and anything else to exit");
-                    }
-                    else if ([holdChoice isEqual: @"reset"]) {
-                        for (Dice *dice in diceCollection) {
+                        else {
                             [dice unHoldDice];
                         }
                     }
-                    else {
-                        makingHoldDecision = NO;
-                        runLoop = NO;
+                }
+                else if ([holdChoice isEqual: @"reset"]) {
+                    for (Dice *dice in diceCollection) {
+                        [dice unHoldDice];
                     }
                 }
-                else
-                {
-                    NSInteger holdIndex = [holdChoice intValue];
-                    if (holdIndex > 5 || holdIndex < 1) {
-                        NSLog(@"Not a valid Choice, program will end");
-                        makingHoldDecision = NO;
-                        runLoop = NO;
+                else {
+                    makingHoldDecision = NO;
+                    runLoop = NO;
+                }
+            }
+            else
+            {
+                NSInteger holdIndex = [holdChoice intValue];
+                if (holdIndex > 5 || holdIndex < 1) {
+                    NSLog(@"Not a valid Choice, program will end");
+                    makingHoldDecision = NO;
+                    runLoop = NO;
+                }
+                else {
+                    Dice *diceSelected =[diceCollection objectAtIndex:holdIndex - 1];
+                    if (diceSelected.held == NO) {
+                        [diceSelected holdDice];
                     }
                     else {
-                        Dice *diceSelected =[diceCollection objectAtIndex:holdIndex - 1];
-                        if (diceSelected.held == NO) {
-                            [diceSelected holdDice];
-                        }
-                        else {
-                            [diceSelected unHoldDice];
-                        }
+                        [diceSelected unHoldDice];
                     }
                 }
             }
-        }
-        else {
-            runLoop = NO;
         }
     }
     return 0;

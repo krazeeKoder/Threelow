@@ -12,11 +12,13 @@
 
 @property (nonatomic, strong) NSString *diceValue;
 @property (nonatomic, assign) bool held;
+@property (nonatomic, assign) int diceScore;
 
--(NSString *) rollDice;
+-(void) rollDice;
 -(void) holdDice;
 -(void) unHoldDice;
 
 -(id) init;
++(int) totalScore: (NSMutableArray *)diceCollection;
 
 @end
