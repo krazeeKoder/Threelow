@@ -37,7 +37,7 @@ int main(int argc, const char * argv[]) {
             bool makingHoldDecision = YES;
             while (makingHoldDecision) {
                 NSLog(@"%@ %@ %@ %@ %@", dice1.diceValue, dice2.diceValue, dice3.diceValue, dice4.diceValue, dice5.diceValue);
-                NSLog(@"Enter the index of a dice you would like to hold or unhold, if you are done, type low to re-roll and anything else to exit");
+                        NSLog(@"Enter the index of a dice you would like to hold or unhold, if you are done, type low to re-roll, reset to reset all holds, and anything else to exit");
                 char choice[255];
                 fgets(choice,255,stdin);
                 NSString *holdChoice = [NSString stringWithUTF8String:choice];
@@ -56,7 +56,12 @@ int main(int argc, const char * argv[]) {
                             }
                         }
                         NSLog(@"%@ %@ %@ %@ %@", dice1.diceValue, dice2.diceValue, dice3.diceValue, dice4.diceValue, dice5.diceValue);
-                        NSLog(@"Enter the index of a dice you would like to hold or unhold, if you are done, type low to re-roll and anything else to exit");
+                        NSLog(@"Enter the index of a dice you would like to hold or unhold, if you are done, type low to re-roll, reset to reset all holds, and anything else to exit");
+                    }
+                    else if ([holdChoice isEqual: @"reset"]) {
+                        for (Dice *dice in diceCollection) {
+                            [dice unHoldDice];
+                        }
                     }
                     else {
                         makingHoldDecision = NO;
